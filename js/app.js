@@ -1,4 +1,6 @@
 const listaDeAmigosIncluidos = document.querySelector('#lista-amigos');
+const listaSorteio = document.querySelector('#lista-sorteio');
+const pessoas = [];
 
 const adicionar = () => {
 
@@ -7,7 +9,7 @@ const adicionar = () => {
     if (amigoInput) {
 
         if (listaDeAmigosIncluidos.innerHTML) {
-            // adicionar a aprtir do segundo nome na lista
+            // adicionar a partir do segundo nome na lista
             listaDeAmigosIncluidos.innerHTML = listaDeAmigosIncluidos.innerHTML + ', ' + amigoInput;
 
         } else {
@@ -16,39 +18,61 @@ const adicionar = () => {
 
         }
 
+        pessoas.push(amigoInput);
+
     } else {
         // input vazio
         alert('Digite um nome.');
 
     }
 
+    console.log(pessoas);
+
+
+};
+
+
+const sortearAmigo = () => {
+    const maxNumber = pessoas.length - 1;
+    const minNumber = 0;
+    return Math.floor(Math.random() * (maxNumber - minNumber + 1) + minNumber);
 };
 
 const sortear = () => {
 
-    if (listaDeAmigosIncluidos.innerHTML) {
-        // criar array com nomes para sortear
-        const nomesParaSortear = listaDeAmigosIncluidos.innerHTML.split(', ');
+    const sorteados = [];
+    const numeroParDeParticipantes = pessoas.length % 2 === 0;
 
-        // o maior número sorteado deve ser igual ao tamanho do array (último índice)
-        const valorMaximo = nomesParaSortear.length - 1;
+    if (numeroParDeParticipantes) {
 
-        // o menor número sorteado deve ser igual a zero (primeiro índice do array)
-        const valorMinimo = 0;
+        for (let i = 0; i < pessoas.length; i++) {
 
-        
+            let sorteadoAgora;
 
-        const sorteio = Math.floor(Math.random() * (valorMaximo - valorMinimo + 1) + valorMinimo);
-        console.log(sorteio);
-        
+            do {
 
-        //const limiteSorteio = nomesParaSortear.length;
-        alert(nomesParaSortear[sorteio])
+                sorteadoAgora = pessoas[sortearAmigo()];
+
+            } while (pessoas[i] === sorteadoAgora || sorteados.includes(sorteadoAgora));
+
+            sorteados.push(sorteadoAgora);
+            listaSorteio.innerHTML = listaSorteio.innerHTML + `${pessoas[i]} presenteia ${sorteadoAgora}<br>`;
+
+        };
+
 
     } else {
-        alert('Sem nomes para sortear');
+        alert('Adicione mais um participante.');
+    };
+
+};
+
+const reiniciar = () => {
+    listaDeAmigosIncluidos.innerHTML = "";
+    listaSorteio.innerHTML = "";
+
+    while (pessoas.length > 0) {
+        pessoas.pop();
     }
-
-
 
 }
